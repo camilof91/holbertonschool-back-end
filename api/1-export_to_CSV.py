@@ -10,19 +10,22 @@ from sys import argv
 if __name__ == "__main__":
 
     employee_id = argv[1]
-    filename = f'{employee_id}.csv'
+    filename = f"{employee_id}.csv"
 
     user_response = requests.get(
         f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    )#.json()
+    )  # .json()
     todos_response = requests.get(
         f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
-    )#.json()
+    )  # .json()
 
     user = user_response.json()
     todos = todos_response.json()
     done_tasks = [task for task in todos if task.get("completed")]
 
-    with open(filename, 'a', newline='') as csv_file:
+    with open(filename, "a", newline="") as csv_file:
         for task in todos:
-            csv_file.write(f'"{employee_id}", "{user.get("name")}", "{str(task.get("completed"))}", "{task.get("title")}"\n')
+            csv_file.write(f'
+                           "{employee_id}", "{user.get("name")}",
+                           "{str(task.get("completed"))}",
+                           "{task.get("title")}"\n')
