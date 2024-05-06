@@ -28,4 +28,5 @@ if __name__ == "__main__":
             csv_file.write(f'
                            "{employee_id}", "{user.get("name")}",
                            "{str(task.get("completed"))}",
-                           "{task.get("title")}"\n')
+                           "{task.get("title")}"\n'
+                        )
