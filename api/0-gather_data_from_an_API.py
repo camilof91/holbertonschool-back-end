@@ -14,6 +14,7 @@ if __name__ == "__main__":
     user_response = requests.get(
         f"https://jsonplaceholder.typicode.com/users/{employee_id}"
     )#.json()
+    print(f"tam user_response{len(user_response)}")
     todos_response = requests.get(
         f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
     )#.json()
