@@ -13,18 +13,20 @@ if __name__ == "__main__":
 
     user_response = requests.get(
         f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    )#.json()
+    )
     print(f"tam user_response{len(user_response)}")
     todos_response = requests.get(
         f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
-    )#.json()
+    )
 
     user = user_response.json()
     todos = todos_response.json()
-    
-    done_tasks = [task for task in todos if task.get("completed")]
 
-    print(f"Employee {user.get('name')} is done with tasks ({len(done_tasks)}/{len(todos)}): ")
+    done_tasks = [task for task in todos if task.get("completed")]
+    print(
+        f"Employee {user.get('name')} is done with tasks "
+        f"({len(done_tasks)}/{len(todos)}): "
+    )
 
     for task in done_tasks:
         print(f"\t{task.get('title')}")

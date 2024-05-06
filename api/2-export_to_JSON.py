@@ -25,7 +25,9 @@ if __name__ == "__main__":
 
     with open(filename, "a", newline="") as csv_file:
         for task in todos:
-            csv_file.write(f'"{employee_id}",'
-                           f'"{user.get("name")}",'
-                           f'"{str(task.get("completed"))}",'
-                           f'"{task.get("title")}"\n')
+            csv_file.write(
+                f'"{employee_id}",'
+                f'"{user.get("name")}",'
+                f'"{str(task.get("completed"))}",'
+                f'"{task.get("title")}"\n'
+            )
