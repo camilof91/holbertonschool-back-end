@@ -25,8 +25,7 @@ if __name__ == "__main__":
                         "username": username,
                         "task": task.get("title"),
                         "completed": task.get("completed"),
-                    }
-                )
+                    })
 
     with open(filename, "w") as file:
         file.write(str(user_tasks))
