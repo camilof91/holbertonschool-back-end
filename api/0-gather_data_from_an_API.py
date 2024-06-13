@@ -1,35 +1,46 @@
 #!/usr/bin/python3
-"""
-Using this REST API, for a given employee ID, returns information about his/her
-TODO list progress
-"""
+""" Script that, using this REST API, for a given employee ID, returns
+    information about his/her TODO list progress."""
 import requests
 from sys import argv
 
 
-if __name__ == "__main__":
+def get_employee(sizeofReq):
+    """ Use API from jsonplaceholder """
 
-    employee_id = argv[1]
+    # Variables
+    taskList = []
+    count = 0
 
-    user_response = requests.get(
-        f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    )
-    print(f"tam user_response{len(user_response)}")
-    todos_response = requests.get(
-        f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
-    )
+    link = "https://jsonplaceholder.typicode.com"
 
-    user = user_response.json()
-    todos = todos_response.json()
+    # get requests
+    usersRes = requests.get(
+        "{}/users/{}".format(link, sizeofReq))
+    todosRes = requests.get(
+        "{}/users/{}/todos".
+        format(link, sizeofReq))
 
-    done_tasks = [task for task in todos if task.get("completed")]
-    print(
-        f"Employee {user.get('name')} is done with tasks "
-        f"({len(done_tasks)}/{len(todos)}): "
-    )
+    # Get the json from responses
+    name = usersRes.json().get('name')
+    todosJson = todosRes.json()
 
-    for task in done_tasks:
-        print(f"\t{task.get('title')}")
+    # Save the employee Name -- Loop the tasks
+    for task in todosJson:
+        if task.get('completed') is True:
+            count += 1
+            # save the task title to taskList
+            taskList.append(task.get('title'))
 
-    print(type(user_response))
-    print(user)
+    # Print the first line
+    print('Employee {} is done with tasks({}/{}):'.format(
+        name, count, len(todosJson)))
+    # Loop the taskList and print tasks
+    for title in taskList:
+        print('\t {}'.format(title))
+
+    return 0
+
+
+if __name__ == '__main__':
+    get_employee(argv[1])

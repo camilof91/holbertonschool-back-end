@@ -1,30 +1,42 @@
 #!/usr/bin/python3
-"""
-Using this REST API, for a given employee ID, returns information about his/her
-TODO list progress
-"""
+""" Using what you did in the task #0, extend your Python script to export
+data in the CSV format. """
+import csv
 import requests
 from sys import argv
 
 
-if __name__ == "__main__":
+def export_to_CSV(sizeofReq):
+    """ The task define export to the CSV format"""
 
-    employee_id = argv[1]
-    filename = f"{employee_id}.csv"
+    # Variables
+    allTasks = []
 
-    user_response = requests.get(
-        f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    )  # .json()
-    todos_response = requests.get(
-        f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
-    )  # .json()
+    link = "https://jsonplaceholder.typicode.com"
 
-    user = user_response.json()
-    todos = todos_response.json()
-    done_tasks = [task for task in todos if task.get("completed")]
+    # get requests
+    usersRes = requests.get("{}/users/{}".format(link, sizeofReq))
+    todosRes = requests.get("{}/users/{}/todos".format(link, sizeofReq))
 
-    with open(filename, "a", newline="") as csv_file:
-        for task in todos:
-            csv_file.write(f'"{employee_id}", "{user.get("name")}",'
-                           f'"{str(task.get("completed"))}",'
-                           f'"{task.get("title")}"\n')
+    # Get the json from responses
+    name = usersRes.json().get('username')
+    todosJson = todosRes.json()
+
+    # Save the employee Name -- Loop the tasks and save
+    for task in todosJson:
+        taskRow = []
+        taskRow.append(sizeofReq)
+        taskRow.append(name)
+        taskRow.append(task.get('completed'))
+        taskRow.append(task.get('title'))
+        allTasks.append(taskRow)
+
+    with open("{}.csv".format(sizeofReq), "w") as csvFile:
+        csvWriter = csv.writer(csvFile, quoting=csv.QUOTE_ALL)
+        csvWriter.writerows(allTasks)
+
+    return 0
+
+
+if __name__ == '__main__':
+    export_to_CSV(int(argv[1]))

@@ -1,31 +1,39 @@
 #!/usr/bin/python3
-"""
-Using this REST API, returns information about all TODO list progress
-"""
+""" Using what you did in the task #0, extend your Python script to export
+data in the JSON format. """
+import json
 import requests
 
 
-if __name__ == "__main__":
+def all_json():
+    # Variables
+    userTask = {}
 
-    filename = "todo_all_employees.json"
-    users_response = requests.get(
-        "https://jsonplaceholder.typicode.com/users").json()
-    todos_response = requests.get(
-        "https://jsonplaceholder.typicode.com/todos").json()
+    link = "https://jsonplaceholder.typicode.com"
 
-    user_tasks = {}
-    for user in users_response:
-        user_id = user.get("id")
-        username = user.get("username")
-        user_tasks[user_id] = []
-        for task in todos_response:
-            if task.get("userId") == user_id:
-                user_tasks[user_id].append(
-                    {
-                        "username": username,
-                        "task": task.get("title"),
-                        "completed": task.get("completed"),
-                    })
+    # get requests
+    usersJson = requests.get("{}/users".format(link)).json()
+    todosJson = requests.get("{}/todos".format(link)).json()
 
-    with open(filename, "w") as file:
-        file.write(str(user_tasks))
+    userInfo = {}
+
+    # get the json from responses
+    for user in usersJson:
+        userInfo[user['id']] = user['username']
+
+    for task in todosJson:
+        if userTask.get(task['userId'], False) is False:
+            userTask[task['userId']] = []
+        taskDict = {}
+        taskDict['username'] = userInfo[task['userId']]
+        taskDict['task'] = task['title']
+        taskDict['completed'] = task['completed']
+        userTask[task['userId']].append(taskDict)
+
+    nameFile = "todo_all_employees.json"
+    with open(nameFile, "w") as jsonFile:
+        json.dump(userTask, jsonFile)
+
+
+if __name__ == '__main__':
+    all_json()
